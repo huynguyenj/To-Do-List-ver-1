@@ -45,16 +45,6 @@ const createElement = (value) => {
   return li;
 };
 
-listWork.addEventListener("click", (e) => {
-  if (e.target.tagName === "LI") {
-    e.target.classList.toggle("checked");
-    saveData();
-  } else if (e.target.tagName === "SPAN") {
-    e.target.parentElement.remove();
-    saveData();
-  }
-});
-
 const addEventEditBtn = (btn, value, li, contentLi) => {
   const input = document.createElement("input");
   input.type = "text";
@@ -72,6 +62,17 @@ const addEventEditBtn = (btn, value, li, contentLi) => {
     }
   });
 };
+
+listWork.addEventListener("click", (e) => {
+  if (e.target.tagName === "LI") {
+    e.target.classList.toggle("checked");
+    saveData();
+  } else if (e.target.tagName === "SPAN") {
+    e.target.parentElement.remove();
+    saveData();
+  }
+});
+
 
 const saveData = () => {
   localStorage.setItem("work", listWork.innerHTML);
@@ -107,13 +108,17 @@ const initSortList = (e) => {
   e.preventDefault();
 
   const draggingItem = listWork.querySelector(".dragging");
+  //Get the rest element that not having dragging class
   const siblings = [...listWork.querySelectorAll(".item:not(.dragging)")];
 
+  //Calculate mouse vertical position at what sibbling is mouse at when dragging item
   let nextSibling = siblings.find((sibling) => {
     const box = sibling.getBoundingClientRect();
     const offset = e.clientY - box.top - box.height / 2;
     return offset < 0;
   });
+
+  //Change position with the element have dragging class
   listWork.insertBefore(draggingItem, nextSibling);
   saveData();
 };
@@ -130,13 +135,13 @@ btnTheme.addEventListener("click", () => {
 const enableDarkMode = () => {
   document.body.classList.add("dark");
   localStorage.setItem("darkmode", "active");
-  btnTheme.innerText = "Dark";
+  btnTheme.innerText = "Light";
 };
 
 const disableDarkMode = () => {
   document.body.classList.remove("dark");
   localStorage.setItem("darkmode", null);
-  btnTheme.innerText = "Light";
+  btnTheme.innerText = "Dark";
 };
 
 if (darkMode === "active") {
